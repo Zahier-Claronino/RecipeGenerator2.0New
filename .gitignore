@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+**/.env
+
+# Firebase service account key
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# OS crap
+.DS_Store
+Thumbs.db
