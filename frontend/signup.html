@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Generator Sign up</title>
+
+    <link rel="stylesheet" href="signup-style.css">
+
+    
+</head>
+<body>
+    <section class="main">
+        <h1>SmartChef AI</h1>
+        <section class="signupForm">
+            <form id="signupForm">
+                <h2>Sign up to smartchef Ai to save your recipe history and for a personalized profile</h2>
+                <label>Full name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name"><br>
+
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter a username"><br>
+
+                <label>Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter a valid email"><br>
+
+                <label>Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter a valid password" autocomplete="new-password" required><br>
+
+                <label>Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Enter your password again" required>
+                <small id="passwordConfirmationError"></small><br><br>
+
+                <button type="submit" id="signupButton">Sign Up</button>
+                <p>Already have an account? <a id="loginRedirect" href="login.html">Login</a></p>
+            </form>
+
+            
+
+        </section>
+    </section>
+    <script type="module" src="./signup.js"></script>
+</body>
+</html>

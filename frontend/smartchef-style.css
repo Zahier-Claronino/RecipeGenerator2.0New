@@ -1,0 +1,115 @@
+body{
+    margin:0;
+    width:100%;
+    height:100vh;
+    background: #87edff;
+    background: linear-gradient(90deg,rgba(135, 237, 255, 1) 2%, rgba(121, 184, 232, 1) 41%, rgba(179, 238, 255, 1) 73%);
+    overflow-x: hidden;
+}
+
+nav{
+    width:100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bob{
+    border-radius: 25px 25px 25px 25px ;
+}
+
+.input{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.input p{
+    font-family: 'Playfair Display', serif;
+    color:darkslategray;
+    font-size: 18px;
+    text-align: center;
+}
+
+.input input{
+    width:80%;
+    height:30px;
+    border-radius: 15px 15px 15px 15px;
+}
+
+#generate-btn{
+    border:none;
+    font-family: 'Playfair Display', serif;
+    background-color:black;
+    color:greenyellow;
+    font-size: 18px;
+    border-radius: 10px 10px 10px 10px;
+    font-weight: 700;
+    transition:0.3s ease-in ;
+    
+}
+
+#generate-btn:hover{
+    animation-play-state: paused;
+    color:black !important;
+    background-color: greenyellow !important;
+    cursor: pointer;
+    
+}
+
+.recipe{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+    min-height:60%;
+}
+
+.results{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width:95%;
+    min-height:100%;
+    background-color:gray;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 3px 3px 3px 3px gray;
+}
+
+.re {
+    font-family: 'Playfair Display', serif;
+    color:whitesmoke;
+    font-size: 18px;
+    text-align: center;
+    width:100%;
+    word-break: break-word;
+    max-height: 450px; /* Optional: limit the height and make scrollable */
+    overflow-y: auto;
+}
+
+
+
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.logout-btn{
+    display: flex;
+    justify-content: center;
+}
+
+#logout{
+    background-color: transparent;
+    border: none;
+    color:maroon;
+    text-decoration: underline;
+    font-size: medium;
+
+}
+
+#logout:hover{
+    cursor: pointer;
+    color:darkslategray;
+}

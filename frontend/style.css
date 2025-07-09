@@ -1,0 +1,218 @@
+
+
+body{
+    margin:0;
+    overflow:hidden;
+    min-height:100vh;
+    width: 100%;
+    scrollbar-gutter: stable;
+    background-image:url('recipeBackground2.webp');
+    background-position: center;
+    background-size:cover;
+}
+body::before{
+    content: '';
+    position:absolute;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100%;
+    background: rgba(0, 0, 0, 0.5);  
+    z-index: 2; 
+    overflow:hidden;
+}
+.all{
+    display:flex;
+    width:100%;
+    height:100vh;
+    
+}
+
+.main{
+    width:65%;
+    min-height:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    position: relative;
+    z-index: 3;
+}
+
+
+
+.main h1{
+    margin:0;
+    font-family: 'Playfair Display', serif;
+    
+    /*font-family: 'Lobster', cursive;
+    font-family: 'Fredoka', sans-serif;*/
+    color:greenyellow;
+    font-size: 60px;
+    text-align: center;
+    animation: pulsating 3s infinite;
+    margin-bottom:0;
+
+}
+
+@keyframes pulsating{
+    0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.main P{
+    color:whitesmoke;
+    font-size: 35px;
+    font-family: 'Lobster', cursive;
+    text-align: center;
+}
+
+#get-started{
+    border:none;
+    font-family: 'Cinzel Decorative', cursive;
+    background-color:black;
+    color:greenyellow;
+    font-size: 18px;
+    border-radius: 10px 10px 10px 10px;
+    font-weight: 700;
+    transition:0.3s ease-in ;
+    animation: changeColor 8s ease-in-out infinite;
+}
+
+@keyframes changeColor{
+    0%{
+        background-color:black;
+    }
+
+    20%{
+        background-color:silver;
+        color:black;
+
+    }
+    40%{
+        color:silver;
+        background-color:maroon;
+    }
+    60%{
+        color:white;
+        background-color: blue;
+    }
+    80%{
+        background-color:black;
+        color:greenyellow;
+    }
+    100%{
+        background-color:black;
+        color:greenyellow;
+    }
+}
+
+#get-started:hover{
+    animation-play-state: paused;
+    color:black !important;
+    background-color: greenyellow !important;
+    cursor: pointer;
+    
+}
+
+
+
+
+
+
+
+
+@media only screen and (max-width:1210px){
+    #chef{
+        width:200px;
+        height:200px;
+    }
+}
+
+@media only screen and (max-width:1090px){
+    #chef{
+        width:150px;
+        height:150px;
+    }
+}
+
+
+@media only screen and (max-width:980px){
+    
+
+    .main{
+        width:100%;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width:930px){
+    .main h1{
+        font-size: 40px;
+    }
+
+    .main p{
+        font-size:28px;
+    }
+}
+
+@media only screen and (max-width:805px){
+    body{
+        background-size: cover;
+    }
+}
+
+@media only screen and (max-width:745px){
+    .chef{
+        width:67%;
+    }
+}
+
+@media only screen and (max-width:660px){
+    .chef{
+        width:70%;
+    }
+}
+
+@media only screen and (max-width:560px){
+    .chef{
+        width:73%;
+    }
+}
+
+@media only screen and (max-width:475px){
+    .chef{
+        width:77%;
+    }
+}
+
+@media only screen and (max-width:420px){
+    .chef{
+        width:80%;
+    }
+}
+
+@media only screen and (max-width:360px){
+    .chef{
+        width:85%;
+    }
+}
+
+@media only screen and (max-width:311px){
+    .chef{
+        width:90%;
+    }
+}
+
+@media only screen and (max-width:275px){
+    .chef{
+        width:100%;
+    }
+
+    #chef{
+        width:120px;
+        height:120px;
+    }
+}
+

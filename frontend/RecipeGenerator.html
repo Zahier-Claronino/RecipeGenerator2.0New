@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartChef AI</title>
+  <link rel="stylesheet" href="smartchef-style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <img src="food.gif" width="120px" height="120px" />
+    <img src="SmartChef.png" width="120px" height="120px" />
+    <img src="food2.gif" id="bob" width="100px" height="100px" />
+    
+    
+</nav>
+<h1 id="WelcomeUser" style="text-align: center;"></h1>
+
+<div class="logout-btn">
+  
+  <button  id="logout" type="button">Logout</button> 
+</div>
+
+  <section class="input">
+    <p>Enter your ingredients separated by a comma and let SmartChef AI cook.</p>
+    <input
+      id="ingredients"
+      type="text"
+      placeholder="e.g. cheese, tomato, bread"
+      size="60"
+    />
+    <br />
+    <button id="generate-btn">Generate Recipe</button>
+  </section>
+
+  <br />
+
+  <section class="recipe">
+    <div class="results">
+      <div class="re" id="result">Waiting for input...</div>
+    </div>
+  </section>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

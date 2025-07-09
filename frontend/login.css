@@ -1,0 +1,75 @@
+body{
+    margin:0;
+    text-align: center;
+    background-color: bisque;
+}
+
+.login-section h1{
+    text-align:center;
+    font-size: 40px;
+    font-family: 'Fredoka', sans-serif;
+    color:darkslategray;
+}
+
+.login-section h2{
+    text-align:center;
+    font-size: 28px;
+    font-family: 'Fredoka', sans-serif;
+    color:black;
+}
+
+.login-section{
+    width:100%;
+    height:100vh;
+    display: flex;
+    flex-direction: column  ;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#loginForm{
+    width:500px;
+    height:300px;
+    background-color:rgba(255, 255, 255, 0.9);
+    border-radius: 15px 15px 15px 15px;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: start;
+    text-align:center;
+    
+}
+
+#loginForm label{
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color:darkslategrey;
+}
+
+#loginForm input{
+    min-width:50%;
+    height:25px;
+}
+
+#loginForm input::placeholder{
+    font-size:14px ;
+    text-align: center;
+}
+
+#loginButton{
+    border:none;
+    background-color: gray;
+    color:white;
+    width:50%;
+    height:30px;
+    font-size: 18px;
+    border-radius: 5px 5px 5px 5px;
+    font-family: 'Fredoka', sans-serif;
+    transition: 0.3s ease;
+}
+
+#loginButton:hover{
+    background-color: darkslategray;
+    cursor:pointer;
+}
