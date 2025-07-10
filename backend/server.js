@@ -22,13 +22,17 @@ app.get('/dashboard', authMiddleware, (req,res) => {
 });
 
 app.post('/signup', async (req,res) => {
-    const {name, username, email, password} = req.body;
+    const {name, username, email} = req.body;
 
     try{
-        const userRecord = await admin.auth().createUser({
+        /*const userRecord = await admin.auth().createUser({
             displayName: username,
             email,
             password,
+        });*/
+        const userRecord = await admin.auth().getUserByEmail(email);
+        await admin.auth().updateUser(userRecord.uid, {
+            displayName: username,
         });
 
         res.status(201).json({
