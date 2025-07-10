@@ -43,7 +43,7 @@ form.addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value.trim();
 
     try{
-        const userCredential = await createUserWithEmailAndPassword(auth, email, passwordVal);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         const res = await fetch('http://localhost:3000/signup', {
             method: 'POST',
