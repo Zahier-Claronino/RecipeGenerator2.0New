@@ -14,7 +14,7 @@ onAuthStateChanged(auth, async (user) => {
             console.log("✅ Logged in as:", user.email);*/
 
             // Fetch dashboard data using the token
-            const dashboardRes = await fetch('http://localhost:10000/dashboard', {
+            const dashboardRes = await fetch('https://recipegenerator2-0new-backend.onrender.com/dashboard', {
                 method: 'GET',
                 headers: {
                     Authorization:`Bearer ${refreshedToken}`,
