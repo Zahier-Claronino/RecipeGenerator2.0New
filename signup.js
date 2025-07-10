@@ -45,7 +45,7 @@ form.addEventListener('submit', async (e) => {
     try{
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        const res = await fetch('http://localhost:3000/signup', {
+        const res = await fetch('http://localhost:10000/signup', {
             method: 'POST',
             headers:{
                 'Content-Type' : 'application/json',
