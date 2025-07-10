@@ -55,7 +55,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('loginPassword').value.trim();
 
     try {
-        const res = await fetch('http://localhost:3000/login', {
+        const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': "application/json" },
             body: JSON.stringify({email, password }),
