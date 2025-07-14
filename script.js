@@ -1,25 +1,35 @@
 import { db, serverTimestamp } from './firebaseConfig.js';
 import { doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("✅ Auth state ready. Logged in as:", user.email);
+    currentUser = user;
+  } else {
+    console.log("🚫 Auth state ready. Not logged in.");
+    currentUser = null;
+  }
+});
 
 // Example function to save the recipe
 async function saveRecipeToFirestore(title, ingredients) {
-  const user = auth.currentUser;
-  if (!user) {
+  if (!currentUser) {
     console.warn("Not logged in, not saving recipe.");
     return;
   }
 
   try {
-    const userRef = doc(db, "users", user.uid);
+    const userRef = doc(db, "users", currentUser.uid);
     const recipesRef = collection(userRef, "recipes");
     await addDoc(recipesRef, {
       title,
       ingredients,
       createdAt: serverTimestamp()
     });
-    console.log("Recipe saved!");
+    console.log("✅ Recipe saved!");
   } catch (error) {
-    console.error("Error saving recipe:", error);
+    console.error("❌ Error saving recipe:", error);
   }
 }
 
