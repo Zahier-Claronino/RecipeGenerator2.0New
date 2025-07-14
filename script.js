@@ -241,6 +241,7 @@ logout.addEventListener('click', function(){
     logout.style.display = 'block'
   }
 });*/
+const WelcomeUser = document.getElementById('WelcomeUser');
 
 if(localStorage.getItem('logged') === 'false'){
   logout.style.display = 'none';
@@ -259,7 +260,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 const username = localStorage.getItem('username');
 
-const WelcomeUser = document.getElementById('WelcomeUser');
+
 
 
 
