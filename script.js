@@ -1,4 +1,4 @@
-import { db, auth, serverTimestamp } from './firebaseConfig.js';
+import { db, serverTimestamp } from './firebaseConfig.js';
 import { doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
 // Example function to save the recipe
