@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recipe History</title>
+  <style>
+    body {
+        height:90vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #a1ffce, #faffd1);
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: gray;
+    }
+
+    #recipeList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+
+    .recipe-card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .recipe-card:hover {
+      transform: scale(1.02);
+    }
+
+    .recipe-card h3 {
+      color: #ff6f61;
+      margin-bottom: 0.75rem;
+    }
+
+    .recipe-card ul {
+      padding-left: 1rem;
+    }
+
+    .recipe-card li {
+      line-height: 1.6;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin: 2rem auto;
+      padding: 0.75rem 1.5rem;
+      background-color: #ff6f61;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+      background-color: #e35a50;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍽️ Your Saved Recipes</h1>
+  <div id="recipeList"></div>
+
+  <script type="module" src="history.js"></script>
+</body>
+</html>

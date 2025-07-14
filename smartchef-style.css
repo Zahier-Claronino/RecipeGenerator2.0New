@@ -109,7 +109,15 @@ nav{
 
 }
 
-#logout:hover{
+#logout:hover, #viewHistoryBtn:hover, #login:hover, #signup:hover{
     cursor: pointer;
     color:darkslategray;
+}
+
+#viewHistoryBtn{
+    background-color: transparent;
+    border: none;
+    color: maroon;
+    text-decoration: underline;
+    font-size: medium;
 }
