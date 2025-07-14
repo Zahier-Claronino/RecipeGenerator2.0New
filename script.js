@@ -242,7 +242,7 @@ logout.addEventListener('click', function(){
   }
 });*/
 const WelcomeUser = document.getElementById('WelcomeUser');
-
+const username = localStorage.getItem('username');
 if(localStorage.getItem('logged') === 'false'){
   logout.style.display = 'none';
   login.style.display = 'block';
@@ -257,7 +257,7 @@ if(localStorage.getItem('logged') === 'false'){
   }
 }
 
-const username = localStorage.getItem('username');
+
 
 
 
