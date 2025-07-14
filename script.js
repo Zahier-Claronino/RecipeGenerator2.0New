@@ -209,6 +209,8 @@ const app = initializeApp(firebaseConfig);
 import { getAuth, signOut ,onAuthStateChanged} from  "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const auth = getAuth(app);
 const logout = document.getElementById('logout');
+const login = document.getElementById('login');
+const signup = document.getElementById('signup');
 logout.addEventListener('click', function(){
   signOut(auth).then( async () => {
 
@@ -222,12 +224,12 @@ logout.addEventListener('click', function(){
     localStorage.removeItem('username'); // Clear username from local storage
     localStorage.removeItem('email'); // Clear email from local storage
     localStorage.setItem('justLoggedIn', 'false'); // Reset justLoggedIn flag
+    localStorage.setItem('logged', 'false'); // Reset logged status
     window.location.href = 'login.html';
 
   });
     
 });
-
 
 //remove logout button if not signed in (remember to add a sign up and sign in option if the user is not signed in)
 /*onAuthStateChanged(auth, (user) => {
@@ -240,7 +242,16 @@ logout.addEventListener('click', function(){
   }
 });*/
 
+if(localStorage.getItem('logged') === 'false'){
+  logout.style.display = 'none';
+  login.style.display = 'block';
+  signup.style.display = 'block';
 
+}else if(localStorage.getItem('logged') === 'true'){
+  logout.style.display = 'block';
+  login.style.display = 'none';
+  signup.style.display = 'none';
+}
 
 const username = localStorage.getItem('username');
 

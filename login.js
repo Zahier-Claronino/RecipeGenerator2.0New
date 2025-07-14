@@ -2,37 +2,40 @@ import { auth } from "./firebaseConfig.js"; // Import your Firebase auth instanc
 
 import {signInWithCustomToken, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-
+localStorage.setItem('logged', 'false');
 // Flag to track if login just happened
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
-
             const refreshedToken = await user.getIdToken(true);
             localStorage.setItem('idToken', refreshedToken);
             /*console.log("✅ Token refreshed and saved to local storage", refreshedToken);
             console.log("✅ Logged in as:", user.email);*/
 
             // Fetch dashboard data using the token
-            const dashboardRes = await fetch('https://recipegenerator2-0new-backend.onrender.com/dashboard', {
+            const dashboardRes = await fetch('https://recipegenerator2-0new-backend.onrender.com/dashboard', {//http://localhost:3000/dashboard
                 method: 'GET',
                 headers: {
                     Authorization:`Bearer ${refreshedToken}`,
                 },
             });
-
+            
+            
 
             const dashboardData = await dashboardRes.json();
             /*console.log("📊 Dashboard data:", dashboardData);*/
             const justoggedIn = localStorage.getItem('justLoggedIn') === 'true';
             // Show alert and redirect only if user just logged in
             if (localStorage.getItem('justLoggedIn') === 'true') {
+                //logged = true;
+                
                 localStorage.setItem('justLoggedIn', 'false');
                 window.location.href = 'RecipeGenerator.html'; // Redirect to homepage/dashboard
                 
             }else{
                 localStorage.removeItem('idToken');
-                localStorage.setItem('justLoggedIn', 'false'); // Reset justLoggedIn flag
+                
+               // logged = false;
             }
 
         } catch (err) {
@@ -70,7 +73,7 @@ loginForm.addEventListener('submit', async (e) => {
         localStorage.setItem('username', data.name || 'User');
         localStorage.setItem('email', data.email);
         localStorage.setItem('idToken', data.idToken);
-
+        localStorage.setItem('logged', 'true');
         // Sign in with the custom token, onAuthStateChanged will handle everything else
         await signInWithCustomToken(auth, data.token);
         loginForm.reset(); 

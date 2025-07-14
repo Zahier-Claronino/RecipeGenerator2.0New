@@ -45,7 +45,7 @@ form.addEventListener('submit', async (e) => {
     try{
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/signup', {
+        const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/signup', { //http://localhost:3000/signup
             method: 'POST',
             headers:{
                 'Content-Type' : 'application/json',

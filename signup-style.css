@@ -93,4 +93,14 @@ small{
 
 #loginRedirect{
     color: darkslategray;
+    font-size: 18px;
 }
+
+#guestLoginButton{
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    color: darkslategray;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+}   

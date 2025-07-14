@@ -100,7 +100,7 @@ nav{
     justify-content: center;
 }
 
-#logout{
+#logout,#login, #signup{
     background-color: transparent;
     border: none;
     color:maroon;
