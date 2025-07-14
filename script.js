@@ -1,5 +1,6 @@
 // Import Firestore stuff and helper functions from your config file
 import { db, serverTimestamp } from './firebaseConfig.js';
+import { doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
 // Import only what you need from Firebase SDK (auth functions)
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
