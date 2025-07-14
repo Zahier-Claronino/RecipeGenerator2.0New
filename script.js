@@ -247,7 +247,6 @@ if(localStorage.getItem('logged') === 'false'){
   logout.style.display = 'none';
   login.style.display = 'block';
   signup.style.display = 'block';
-  localStorage.removeItem('refreshedToken'); // Clear refreshed token from local storage
 
 }else if(localStorage.getItem('logged') === 'true'){
   logout.style.display = 'block';
