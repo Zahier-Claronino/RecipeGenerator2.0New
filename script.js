@@ -1,3 +1,39 @@
+import { db, auth, serverTimestamp } from './firebaseConfig.js';
+import { doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+// Example function to save the recipe
+async function saveRecipeToFirestore(title, ingredients) {
+  const user = auth.currentUser;
+  if (!user) {
+    console.warn("Not logged in, not saving recipe.");
+    return;
+  }
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const recipesRef = collection(userRef, "recipes");
+    await addDoc(recipesRef, {
+      title,
+      ingredients,
+      createdAt: serverTimestamp()
+    });
+    console.log("Recipe saved!");
+  } catch (error) {
+    console.error("Error saving recipe:", error);
+  }
+}
+
+function extractIngredientsFromRecipe(recipeString) {
+  const ingredientsMatch = recipeString.match(/Ingredients:\n([\s\S]*?)\n\nInstructions:/);
+  if (!ingredientsMatch) return [];
+
+  // Split ingredients by lines, remove the '- ' prefix
+  return ingredientsMatch[1].split('\n').map(line => line.replace(/^\-\s*/, '').trim());
+}
+
+
+
+
 
 const generateBtn = document.getElementById("generate-btn");
 generateBtn.addEventListener("click", generateRecipe);
@@ -92,10 +128,6 @@ Separate each recipe clearly with a dashed line (---).`;
       titleElem.textContent = title;
       recipeDiv.appendChild(titleElem);
 
-     /*let titleElemHeight = titleElem.offsetHeight;
-     let recipeDivHeight = recipeDiv.offsetHeight;
-     let totalH = recipeDivHeight - titleElemHeight - 100;*/
-
       const contentRow = document.createElement("div");
       contentRow.style.display = "flex";
 
@@ -106,10 +138,11 @@ Separate each recipe clearly with a dashed line (---).`;
       pre.style.flex = "1";
       pre.textContent = recipes[i];
       contentRow.appendChild(pre);
-      
-      
-      
-      
+
+      // Save each recipe to Firestore here:
+      const recipeIngredients = extractIngredientsFromRecipe(recipes[i]);
+      await saveRecipeToFirestore(title, recipeIngredients);
+      console.log(`Saved recipe: ${title}`);
 
       // 🖼️ Image loader container
       const imageWrapper = document.createElement("div");
@@ -118,8 +151,6 @@ Separate each recipe clearly with a dashed line (---).`;
       imageWrapper.style.alignItems = "start";
       imageWrapper.style.justifyContent = "start";
       imageWrapper.style.width = "40%";
-      /*imageWrapper.style.height = `${totalH}px`;*/
-
 
       // ⏳ Spinner
       const spinner = document.createElement("div");
@@ -136,22 +167,18 @@ Separate each recipe clearly with a dashed line (---).`;
       const img = document.createElement("img");
       img.style.maxWidth = "100%";
       img.style.display = "none";
-      img.style.flex = '1';
+      img.style.flex = "1";
       img.src = generateImagePollinations(`${title}`);
       img.alt = title;
-      img.style.marginTop = '17.5px';
-      
+      img.style.marginTop = "17.5px";
 
       img.onload = () => {
         spinner.remove();
         img.style.display = "block";
         requestAnimationFrame(() => {
-          console.log("the height of pre is: " + pre.offsetHeight);
           const H = pre.offsetHeight;
           img.style.height = `${H}px`;
-
-          console.log("the height of the image is: " + img.offsetHeight);
-
+          console.log("Image height set to:", img.style.height);
         });
       };
 
