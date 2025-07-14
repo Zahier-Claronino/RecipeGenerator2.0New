@@ -1,5 +1,22 @@
 import { db, serverTimestamp } from './firebaseConfig.js';
 import { doc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+// ✅ Your Firebase config (from your Firebase project settings)
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app-id",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdefgh"
+};
+
+// ✅ Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+import { getAuth, signOut ,onAuthStateChanged} from  "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+const auth = getAuth(app);
 let currentUser = null;
 
 onAuthStateChanged(auth, (user) => {
@@ -228,23 +245,7 @@ document.getElementById("ingredients").addEventListener("keydown", function (eve
   }
 });
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-// ✅ Your Firebase config (from your Firebase project settings)
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app-id",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdefgh"
-};
-
-// ✅ Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-import { getAuth, signOut ,onAuthStateChanged} from  "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-const auth = getAuth(app);
 const logout = document.getElementById('logout');
 const login = document.getElementById('login');
 const signup = document.getElementById('signup');
