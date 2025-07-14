@@ -246,24 +246,24 @@ if(localStorage.getItem('logged') === 'false'){
   logout.style.display = 'none';
   login.style.display = 'block';
   signup.style.display = 'block';
+  localStorage.removeItem('refreshedToken'); // Clear refreshed token from local storage
 
 }else if(localStorage.getItem('logged') === 'true'){
   logout.style.display = 'block';
   login.style.display = 'none';
   signup.style.display = 'none';
+  if (WelcomeUser && username) {
+    WelcomeUser.textContent = `Welcome ${username}, Lets cook.`;
+  }
 }
 
 const username = localStorage.getItem('username');
 
 const WelcomeUser = document.getElementById('WelcomeUser');
 
-if (WelcomeUser && username) {
-  WelcomeUser.textContent = `Welcome ${username}, Lets cook.`;
-}
 
-const idToken = localStorage.getItem('idToken');
 
-console.log("ID Token from localStorage:", idToken, "from RecipeGenerator.js", username);
+
 
 
 
