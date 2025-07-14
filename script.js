@@ -247,6 +247,8 @@ if(localStorage.getItem('logged') === 'false'){
   logout.style.display = 'none';
   login.style.display = 'block';
   signup.style.display = 'block';
+  localStorage.removeItem('idToken');
+
 
 }else if(localStorage.getItem('logged') === 'true'){
   logout.style.display = 'block';
