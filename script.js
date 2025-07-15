@@ -21,7 +21,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Example function to save the recipe
-async function saveRecipeToFirestore(recipe ,title, ingredients) {
+async function saveRecipeToFirestore(title, ingredients, instructions) {
   if (!currentUser) {
     console.warn("Not logged in, not saving recipe.");
     return;
@@ -33,8 +33,9 @@ async function saveRecipeToFirestore(recipe ,title, ingredients) {
     await addDoc(recipesRef, {
       title,
       ingredients,
-      createdAt: serverTimestamp(),
-      instructions: recipe.instructions || "No instructions provided."
+      instructions: instructions || "No instructions provided.",
+      createdAt: serverTimestamp()
+      
     });
     console.log("✅ Recipe saved!");
   } catch (error) {
@@ -50,7 +51,12 @@ function extractIngredientsFromRecipe(recipeString) {
   return ingredientsMatch[1].split('\n').map(line => line.replace(/^\-\s*/, '').trim());
 }
 
+function extractInstructionsFromRecipe(recipeString) {
+  const instructionsMatch = recipeString.match(/Instructions:\n([\s\S]*)/);
+  if (!instructionsMatch) return "No instructions provided.";
 
+  return instructionsMatch[1].trim();
+}
 
 
 
@@ -160,7 +166,8 @@ Separate each recipe clearly with a dashed line (---).`;
 
       // Save each recipe to Firestore here:
       const recipeIngredients = extractIngredientsFromRecipe(recipes[i]);
-      await saveRecipeToFirestore(recipes, title, recipeIngredients);
+      const recipeInstructions = extractInstructionsFromRecipe(recipes[i]);
+      await saveRecipeToFirestore(title, recipeIngredients, recipeInstructions);
       console.log(`Saved recipe: ${title}`);
 
       // 🖼️ Image loader container
