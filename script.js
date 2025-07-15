@@ -72,7 +72,7 @@ async function generateRecipe() {
     return;
   }
 
-  result.textContent = "Generating recipe... please wait.";
+  result.textContent = "Generating recipe... please wait.(Wait Time: 10s-30s)";
 
   const prompt = `You are a professional chef. Based ONLY on the following ingredients: ${ingredients}, generate as many complete recipes as possible.
 
