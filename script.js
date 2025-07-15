@@ -20,6 +20,41 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// Add loading spinner container to DOM (hidden by default)
+const loadingSpinner = document.createElement("div");
+loadingSpinner.id = "loading-spinner";
+loadingSpinner.style.position = "fixed";
+loadingSpinner.style.top = "0";
+loadingSpinner.style.left = "0";
+loadingSpinner.style.width = "100%";
+loadingSpinner.style.height = "100%";
+loadingSpinner.style.backgroundColor = "rgba(0,0,0,0.4)";
+loadingSpinner.style.display = "none";
+loadingSpinner.style.alignItems = "center";
+loadingSpinner.style.justifyContent = "center";
+loadingSpinner.style.zIndex = "9999";
+
+const spinnerCircle = document.createElement("div");
+spinnerCircle.style.border = "16px solid #f3f3f3";
+spinnerCircle.style.borderTop = "16px solid #3498db";
+spinnerCircle.style.borderRadius = "50%";
+spinnerCircle.style.width = "120px";
+spinnerCircle.style.height = "120px";
+spinnerCircle.style.animation = "spin 2s linear infinite";
+
+loadingSpinner.appendChild(spinnerCircle);
+document.body.appendChild(loadingSpinner);
+
+// Add spinner keyframes style
+const style = document.createElement("style");
+style.textContent = `
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}`;
+document.head.appendChild(style);
+
+
 // Example function to save the recipe
 async function saveRecipeToFirestore(title, ingredients, instructions) {
   if (!currentUser) {
@@ -72,6 +107,9 @@ async function generateRecipe() {
     return;
   }
 
+  // Show the loading spinner
+  loadingSpinner.style.display = "flex";
+
   result.textContent = "Generating recipe... please wait.(Wait Time: 10s-45s)";
 
   const prompt = `You are a professional chef. Based ONLY on the following ingredients: ${ingredients}, generate as many complete recipes as possible.
@@ -118,6 +156,7 @@ Separate each recipe clearly with a dashed line (---).`;
 
     if (!cohereResponse.ok) {
       result.textContent = `❌ Cohere API error: ${cohereResponse.status} ${cohereResponse.statusText}`;
+      loadingSpinner.style.display = "none"; // Hide spinner on error
       return;
     }
 
@@ -125,6 +164,7 @@ Separate each recipe clearly with a dashed line (---).`;
 
     if (!(cohereData.generations && cohereData.generations.length > 0)) {
       result.textContent = "❌ No recipe generated. Try again or check your API key.";
+      loadingSpinner.style.display = "none"; // Hide spinner on error
       return;
     }
 
@@ -223,9 +263,15 @@ Separate each recipe clearly with a dashed line (---).`;
     }
 
     result.appendChild(container);
+
+    // Hide the loading spinner once recipes are displayed
+    loadingSpinner.style.display = "none";
+
   } catch (err) {
     result.textContent = "❌ An error occurred while generating the recipe.";
     console.error(err);
+    // Hide spinner on error
+    loadingSpinner.style.display = "none";
   }
 }
 
@@ -292,7 +338,7 @@ if(localStorage.getItem('logged') === 'false'){
   login.style.display = 'none';
   signup.style.display = 'none';
   if (WelcomeUser && username) {
-    WelcomeUser.textContent = `Welcome ${username}, Lets cook.`;
+    WelcomeUser.textContent = `Welcome ${username}`;
   }
 }
 
