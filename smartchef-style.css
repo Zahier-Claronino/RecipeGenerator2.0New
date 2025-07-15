@@ -84,7 +84,7 @@ nav{
     text-align: center;
     width:100%;
     word-break: break-word;
-    max-height: 450px; /* Optional: limit the height and make scrollable */
+    max-height: 650px; /* Optional: limit the height and make scrollable */
     overflow-y: auto;
 }
 
