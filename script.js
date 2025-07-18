@@ -237,6 +237,7 @@ Separate each recipe clearly with a dashed line (---).`;
       img.src = generateImagePollinations(`${title}`);
       img.alt = title;
       img.style.marginTop = "17.5px";
+      img.style.minHeight = "380px";
 
       img.onload = () => {
         spinner.remove();
