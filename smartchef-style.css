@@ -2,8 +2,7 @@ body{
     margin:0;
     width:100%;
     height:100vh;
-    background: #87edff;
-    background: linear-gradient(90deg,rgba(135, 237, 255, 1) 2%, rgba(121, 184, 232, 1) 41%, rgba(179, 238, 255, 1) 73%);
+    background: linear-gradient(135deg, #f6fba2, #20ded3);
     overflow-x: hidden;
 }
 
