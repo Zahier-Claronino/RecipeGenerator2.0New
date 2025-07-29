@@ -5,12 +5,137 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmartChef AI</title>
   <link rel="stylesheet" href="smartchef-style.css" />
+  <style>
+    .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #feca57 100%);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Navigation List */
+        .nav-list {
+            display: flex;
+            list-style: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 8px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Navigation Items */
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
+            min-width: 80px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Icons */
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Active State */
+        .nav-item.active .nav-link {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        /* Hover Effects */
+        .nav-link:hover {
+            color: #ffffff;
+            transform: translateY(-3px);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+ 
+        .nav-link:hover .nav-icon {
+            transform: scale(1.05);
+        }
+
+        #homeButton{
+            text-decoration: line-through;
+
+        }
+  </style>
 </head>
 <body>
-  <nav class="nav">
-    <img src="food.gif" width="120px" height="120px" />
-    <img src="SmartChef.png" width="120px" height="120px" />
-    <img src="food2.gif" id="bob" width="100px" height="100px" />
+
+<nav class="nav-container">
+    <div class="navbar">
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="#home" href="RecipeGenerator.html" class="nav-link" data-page="home" id="homeButton">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a  href="history.html" class="nav-link" data-page="history">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    Recipe History
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#favorites" class="nav-link" data-page="favorites">
+                    <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/>
+                    </svg>
+                    Favorites
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<nav class="nav">
+  <img src="food.gif" width="120px" height="120px" />
+  <img src="SmartChef.png" width="120px" height="120px" />
+  <img src="food2.gif" id="bob" width="100px" height="100px" />
     
     
 </nav>
@@ -21,7 +146,6 @@
   <button  id="logout" type="button">Logout</button> 
   <button id="login" type="button"><a href="login.html">Login</a></button>
   <button id="signup" type="button"><a href="signup.html">Sign Up</a></button>
-  <a href="history.html"><button id="viewHistoryBtn"> View Recipe History</button></a>
 </div>
 
   <section class="input">

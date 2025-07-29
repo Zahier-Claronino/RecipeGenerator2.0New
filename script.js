@@ -245,7 +245,8 @@ Separate each recipe clearly with a dashed line (---).`;
         requestAnimationFrame(() => {
           const H = pre.offsetHeight;
           img.style.height = `${H}px`;
-          console.log("Image height set to:", img.style.height);
+      
+          console.log("Image height set to:", img.style.height, "H:", H );
         });
       };
 
