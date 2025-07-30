@@ -116,8 +116,8 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         loginForm.reset(); 
-        window.location.href = 'RecipeGenerator.html';
-
+        // window.location.href = 'RecipeGenerator.html';
+        window.location.replace('RecipeGenerator.html');
     } catch (error) {
         alert("Login Failed: " + error.message);
         console.error(error);
