@@ -47,13 +47,11 @@ app.post('/signup', async (req,res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const {name,username, email, password} = req.body;
-    try{
-            const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`, {
+    const { email, password } = req.body;
+    try {
+        const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email,
                 password,
@@ -62,11 +60,12 @@ app.post('/login', async (req, res) => {
         });
 
         const data = await response.json();
-        console.log(process.env.FIREBASE_API_KEY)
+
         if (!response.ok) {
-            return res.status(400).json({error: data.error.message});
+            return res.status(400).json({ error: data.error.message });
         }
 
+        // 👇 Get user profile to fetch displayName
         const profileResponse = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${process.env.FIREBASE_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -74,25 +73,22 @@ app.post('/login', async (req, res) => {
         });
 
         const profileData = await profileResponse.json();
-        const user = profileData.users[0];
+        const user = profileData.users[0]; // contains displayName, email, etc.
 
-        const customToken = await admin.auth().createCustomToken(data.localId); 
+        const customToken = await admin.auth().createCustomToken(data.localId);
 
         res.status(200).json({
             message: 'Login Successful',
             token: customToken,
             idToken: data.idToken,
-            email: data.email,
-            name: data.displayName || null,
+            email: user.email,
+            name: user.displayName || user.email.split('@')[0] || 'User',
         });
 
-        localStorage.setItem('username', user.displayName || username);
     } catch (error) {
-        console.error("Login error: " + error.message);
-        res.status(500).json({error: 'Internal Server Error'});
+        console.error("Login error:", error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    
 });
 
 
