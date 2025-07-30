@@ -1,6 +1,10 @@
-import { auth } from "./firebaseConfig.js";  
-import { signInWithCustomToken, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+import { auth } from "./firebaseConfig.js"; // Import your Firebase auth instance  
+import {
+    signInWithCustomToken,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
+// 🌟 Inject loading spinner HTML & styles
 const loader = document.createElement('div');
 loader.id = 'login-loader';
 loader.innerHTML = `<div class="spinner"></div>`;
@@ -38,6 +42,7 @@ document.head.appendChild(style);
 
 localStorage.setItem('logged', 'false');
 
+// 🔁 Monitor auth state
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
@@ -47,7 +52,7 @@ onAuthStateChanged(auth, async (user) => {
             const dashboardRes = await fetch('https://recipegenerator2-0new-backend.onrender.com/dashboard', {
                 method: 'GET',
                 headers: {
-                    Authorization:`Bearer ${refreshedToken}`,
+                    Authorization: `Bearer ${refreshedToken}`,
                 },
             });
 
@@ -56,7 +61,7 @@ onAuthStateChanged(auth, async (user) => {
 
             if (justLoggedIn) {
                 localStorage.setItem('justLoggedIn', 'false');
-                window.location.href = 'RecipeGenerator.html';
+                window.location.href = 'RecipeGenerator.html'; // Redirect to homepage/dashboard
             } else {
                 localStorage.removeItem('idToken');
             }
@@ -66,7 +71,7 @@ onAuthStateChanged(auth, async (user) => {
         }
     } else {
         console.log("👤 No user is currently logged in.");
-        localStorage.removeItem('idToken');
+        localStorage.removeItem('idToken'); // Cleanup
     }
 });
 
@@ -75,21 +80,13 @@ const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // 🌀 Show the spinner
     document.getElementById('login-loader').style.display = 'flex';
 
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
 
     try {
-        // ✅ First, sign in the user using Firebase to check email verification
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        if (!user.emailVerified) {
-            throw new Error("Please verify your email before logging in.");
-        }
-
-        // 🔐 Now it's verified, proceed with backend login
         const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/login', {
             method: 'POST',
             headers: { 'Content-Type': "application/json" },
@@ -105,9 +102,18 @@ loginForm.addEventListener('submit', async (e) => {
         localStorage.setItem('email', data.email);
         localStorage.setItem('idToken', data.idToken);
         localStorage.setItem('logged', 'true');
-        localStorage.setItem('justLoggedIn', 'true');
 
         await signInWithCustomToken(auth, data.token);
+
+        // 🔒 Check if email is verified
+        const user = auth.currentUser;
+        if (user && !user.emailVerified) {
+            alert("❌ Please verify your email before logging in.");
+            await auth.signOut();
+            localStorage.clear();
+            document.getElementById('login-loader').style.display = 'none';
+            return;
+        }
 
         loginForm.reset(); 
         window.location.href = 'RecipeGenerator.html';
@@ -116,6 +122,7 @@ loginForm.addEventListener('submit', async (e) => {
         alert("Login Failed: " + error.message);
         console.error(error);
     } finally {
+        // ✅ Hide the spinner no matter what
         document.getElementById('login-loader').style.display = 'none';
     }
 });

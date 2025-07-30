@@ -1,5 +1,5 @@
 import { auth } from './firebaseConfig.js';
-import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 // 🎨 Inject loading spinner overlay
 const loader = document.createElement('div');
@@ -79,15 +79,26 @@ form.addEventListener('submit', async (e) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
+        // ✉️ Send email verification
         await sendEmailVerification(user);
-        alert("Verification email sent! Please check your inbox before logging in.");
+        alert("Verification email sent. Please check your inbox.");
 
-        // Optional: Save name & username temporarily to localStorage
-        localStorage.setItem('pendingSignup', JSON.stringify({ name, username, email }));
+        // 🛰️ Notify backend (keep this untouched)
+        const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, username, email, password }),
+        });
 
-        await signOut(auth);
+        const data = await res.json();
+        if (!res.ok) throw new Error("Signup Failed " + data.error);
+
+        console.log("User created: " + data.username);
         form.reset();
+
+        // Redirect after successful signup
         window.location.href = 'login.html';
+
     } catch (error) {
         alert("Signup Failed: " + error.message);
         console.error(error);
@@ -95,6 +106,7 @@ form.addEventListener('submit', async (e) => {
         document.getElementById('signup-loader').style.display = 'none';
     }
 });
+
 // 🧹 Clear local storage
 localStorage.removeItem('idToken');
 localStorage.removeItem('username');

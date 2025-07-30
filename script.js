@@ -340,7 +340,7 @@ if(localStorage.getItem('logged') === 'false'){
   login.style.display = 'none';
   signup.style.display = 'none';
   if (WelcomeUser && username) {
-    WelcomeUser.textContent = `Welcome ${username}`;
+    WelcomeUser.textContent = `Welcome ${username}, Lets Cook`;
   }
 }
 
