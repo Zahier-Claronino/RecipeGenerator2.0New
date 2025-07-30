@@ -1,5 +1,5 @@
 import { auth } from './firebaseConfig.js';
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 // 🎨 Inject loading spinner overlay
 const loader = document.createElement('div');
@@ -68,8 +68,6 @@ confirmPassword.addEventListener('input', confirmPasswordFunc);
 const form = document.getElementById('signupForm');
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // ✨ Show the spinner
     document.getElementById('signup-loader').style.display = 'flex';
 
     const name = document.getElementById('name').value.trim();
@@ -81,32 +79,22 @@ form.addEventListener('submit', async (e) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, username, email, password }),
-        });
+        await sendEmailVerification(user);
+        alert("Verification email sent! Please check your inbox before logging in.");
 
-        const data = await res.json();
-        if (!res.ok) throw new Error("Signup Failed " + data.error);
+        // Optional: Save name & username temporarily to localStorage
+        localStorage.setItem('pendingSignup', JSON.stringify({ name, username, email }));
 
-        alert("Signup successful!");
-        console.log("User created: " + data.username);
+        await signOut(auth);
         form.reset();
-
         window.location.href = 'login.html';
-
     } catch (error) {
         alert("Signup Failed: " + error.message);
         console.error(error);
     } finally {
-        // ✋ Hide the spinner
         document.getElementById('signup-loader').style.display = 'none';
     }
 });
-
 // 🧹 Clear local storage
 localStorage.removeItem('idToken');
 localStorage.removeItem('username');
