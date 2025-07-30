@@ -82,7 +82,7 @@ form.addEventListener('submit', async (e) => {
         // ✉️ Send email verification
         await sendEmailVerification(user);
         alert("Verification email sent. Please check your inbox.");
-
+        
         // 🛰️ Notify backend (keep this untouched)
         const res = await fetch('https://recipegenerator2-0new-backend.onrender.com/signup', {
             method: 'POST',
@@ -92,7 +92,6 @@ form.addEventListener('submit', async (e) => {
 
         const data = await res.json();
         if (!res.ok) throw new Error("Signup Failed " + data.error);
-
         console.log("User created: " + data.username);
         form.reset();
 
