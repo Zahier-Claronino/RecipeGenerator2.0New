@@ -1,5 +1,5 @@
 import { auth } from "./firebaseConfig.js";  
-import { signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+import { signInWithCustomToken, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 const loader = document.createElement('div');
 loader.id = 'login-loader';
@@ -82,7 +82,7 @@ loginForm.addEventListener('submit', async (e) => {
 
     try {
         // ✅ First, sign in the user using Firebase to check email verification
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
         if (!user.emailVerified) {
