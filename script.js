@@ -140,7 +140,7 @@ Instructions:
 Separate each recipe clearly with a dashed line (---).`;
 
   try {
-    const cohereResponse = await fetch("https://api.cohere.ai/v1/generate", {
+    const cohereResponse = await fetch("https://api.cohere.com/v1/generate", {
       method: "POST",
       headers: {
         Authorization: "Bearer 7NiBcnXBgwnBJlU5UTtodGKruHzGViokIulBkyeR",
@@ -355,3 +355,4 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
