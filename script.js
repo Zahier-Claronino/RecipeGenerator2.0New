@@ -149,7 +149,7 @@ Separate each recipe clearly with a dashed line (---).`;
       body: JSON.stringify({
         model: "command-xlarge-nightly",
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 500,
+        max_tokens: 2000,
         temperature: 0.1,
       }),
     });
@@ -335,6 +335,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
