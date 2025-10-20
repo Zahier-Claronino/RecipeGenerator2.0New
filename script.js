@@ -139,7 +139,6 @@ Instructions:
 Separate each recipe clearly with a dashed line (---).`;
 
   try {
-    // ✅ Updated fetch for v2/chat
     const cohereResponse = await fetch("https://api.cohere.com/v2/chat", {
       method: "POST",
       headers: {
@@ -149,30 +148,24 @@ Separate each recipe clearly with a dashed line (---).`;
       body: JSON.stringify({
         model: "command-xlarge-nightly",
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 2000,
+        max_tokens: 1500, // increased for longer recipes
         temperature: 0.1,
       }),
     });
 
-    if (!cohereResponse.ok) {
-      result.textContent = `❌ Cohere API error: ${cohereResponse.status} ${cohereResponse.statusText}`;
-      loadingSpinner.style.display = "none";
-      return;
-    }
-
     const cohereData = await cohereResponse.json();
+    console.log("Full API response:", cohereData); // <-- debug full response
 
-    // Updated path to text: v2/chat returns an array in `response`
-    if (!(cohereData.response && cohereData.response.length > 0)) {
-      result.textContent = "❌ No recipe generated. Try again or check your API key.";
+    // Safely check if response exists
+    const recipeText = cohereData.response?.[0]?.message?.content?.trim();
+
+    if (!recipeText) {
+      result.textContent = "❌ No recipe generated. Check your API key or try different ingredients.";
       loadingSpinner.style.display = "none";
       return;
     }
 
-    const recipeText = cohereData.response[0].message.content.trim();
     const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
-
-    // Everything below stays exactly the same
     result.innerHTML = "";
     const container = document.createElement("div");
     container.style.display = "flex";
@@ -206,7 +199,6 @@ Separate each recipe clearly with a dashed line (---).`;
       pre.textContent = recipes[i];
       contentRow.appendChild(pre);
 
-      // Save each recipe to Firestore
       const recipeIngredients = extractIngredientsFromRecipe(recipes[i]);
       const recipeInstructions = extractInstructionsFromRecipe(recipes[i]);
       await saveRecipeToFirestore(title, recipeIngredients, recipeInstructions);
@@ -243,9 +235,7 @@ Separate each recipe clearly with a dashed line (---).`;
         spinner.remove();
         img.style.display = "block";
         requestAnimationFrame(() => {
-          const H = pre.offsetHeight;
-          img.style.height = `${H}px`;
-          console.log("Image height set to:", img.style.height, "H:", H );
+          img.style.height = `${pre.offsetHeight}px`;
         });
       };
 
@@ -272,7 +262,6 @@ Separate each recipe clearly with a dashed line (---).`;
     loadingSpinner.style.display = "none";
   }
 }
-
 
 const logout = document.getElementById('logout');
 const login = document.getElementById('login');
@@ -335,6 +324,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
