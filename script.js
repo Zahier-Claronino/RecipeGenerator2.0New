@@ -109,7 +109,6 @@ async function generateRecipe() {
 
   // Show the loading spinner
   loadingSpinner.style.display = "flex";
-
   result.textContent = "Generating recipe... please wait.(Wait Time: 10s-45s)";
 
   const prompt = `You are a professional chef. Based ONLY on the following ingredients: ${ingredients}, generate as many complete recipes as possible.
@@ -139,63 +138,140 @@ Instructions:
 
 Separate each recipe clearly with a dashed line (---).`;
 
- try {
-  const cohereResponse = await fetch("https://api.cohere.com/v2/chat", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer V8ZgHC0BnnsNkIGaPv6CatEpnhVRPwHwX9ptxcW0",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "command-xlarge-nightly", // Use a model from your key's available models
-      messages: [
-        { role: "user", content: prompt }
-      ],
-      max_tokens: 500,
-      temperature: 0.1,
-    }),
-  });
+  try {
+    // ✅ Updated fetch for v2/chat
+    const cohereResponse = await fetch("https://api.cohere.com/v2/chat", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer V8ZgHC0BnnsNkIGaPv6CatEpnhVRPwHwX9ptxcW0",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "command-xlarge-nightly",
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 500,
+        temperature: 0.1,
+      }),
+    });
 
-  if (!cohereResponse.ok) {
-    result.textContent = `❌ Cohere API error: ${cohereResponse.status} ${cohereResponse.statusText}`;
-    loadingSpinner.style.display = "none"; // Hide spinner on error
-    return;
+    if (!cohereResponse.ok) {
+      result.textContent = `❌ Cohere API error: ${cohereResponse.status} ${cohereResponse.statusText}`;
+      loadingSpinner.style.display = "none";
+      return;
+    }
+
+    const cohereData = await cohereResponse.json();
+
+    // Updated path to text: v2/chat returns an array in `response`
+    if (!(cohereData.response && cohereData.response.length > 0)) {
+      result.textContent = "❌ No recipe generated. Try again or check your API key.";
+      loadingSpinner.style.display = "none";
+      return;
+    }
+
+    const recipeText = cohereData.response[0].message.content.trim();
+    const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
+
+    // Everything below stays exactly the same
+    result.innerHTML = "";
+    const container = document.createElement("div");
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
+    container.style.justifyContent = "center";
+    container.style.borderRadius = "10px";
+
+    const recipes = recipeText.split("---").map((r) => r.trim()).filter(Boolean);
+
+    for (let i = 0; i < recipes.length; i++) {
+      const recipeDiv = document.createElement("div");
+      recipeDiv.style.background = "whitesmoke";
+      recipeDiv.style.color = "darkslategray";
+      recipeDiv.style.display = "flex";
+      recipeDiv.style.flexDirection = "column";
+      recipeDiv.style.justifyContent = "start";
+
+      const title = recipeTitles[i] || `Recipe ${i + 1}`;
+      const titleElem = document.createElement("h3");
+      titleElem.textContent = title;
+      recipeDiv.appendChild(titleElem);
+
+      const contentRow = document.createElement("div");
+      contentRow.style.display = "flex";
+
+      const pre = document.createElement("pre");
+      pre.style.whiteSpace = "pre-wrap";
+      pre.style.backgroundColor = "lightblue";
+      pre.style.color = "black";
+      pre.style.flex = "1";
+      pre.textContent = recipes[i];
+      contentRow.appendChild(pre);
+
+      // Save each recipe to Firestore
+      const recipeIngredients = extractIngredientsFromRecipe(recipes[i]);
+      const recipeInstructions = extractInstructionsFromRecipe(recipes[i]);
+      await saveRecipeToFirestore(title, recipeIngredients, recipeInstructions);
+      console.log(`Saved recipe: ${title}`);
+
+      // Image loader
+      const imageWrapper = document.createElement("div");
+      imageWrapper.style.position = "relative";
+      imageWrapper.style.display = "flex";
+      imageWrapper.style.alignItems = "start";
+      imageWrapper.style.justifyContent = "start";
+      imageWrapper.style.width = "40%";
+
+      const spinner = document.createElement("div");
+      spinner.className = "spinner";
+      spinner.style.border = "6px solid #f3f3f3";
+      spinner.style.borderTop = "6px solid #3498db";
+      spinner.style.borderRadius = "50%";
+      spinner.style.width = "40px";
+      spinner.style.height = "40px";
+      spinner.style.animation = "spin 1s linear infinite";
+      imageWrapper.appendChild(spinner);
+
+      const img = document.createElement("img");
+      img.style.maxWidth = "100%";
+      img.style.display = "none";
+      img.style.flex = "1";
+      img.src = generateImagePollinations(`${title}`);
+      img.alt = title;
+      img.style.marginTop = "17.5px";
+      img.style.minHeight = "380px";
+
+      img.onload = () => {
+        spinner.remove();
+        img.style.display = "block";
+        requestAnimationFrame(() => {
+          const H = pre.offsetHeight;
+          img.style.height = `${H}px`;
+          console.log("Image height set to:", img.style.height, "H:", H );
+        });
+      };
+
+      img.onerror = () => {
+        spinner.remove();
+        const errorText = document.createElement("div");
+        errorText.textContent = "⚠️ Image failed to load.";
+        imageWrapper.appendChild(errorText);
+      };
+
+      imageWrapper.appendChild(img);
+      contentRow.appendChild(imageWrapper);
+
+      recipeDiv.appendChild(contentRow);
+      container.appendChild(recipeDiv);
+    }
+
+    result.appendChild(container);
+    loadingSpinner.style.display = "none";
+
+  } catch (err) {
+    result.textContent = "❌ An error occurred while generating the recipe.";
+    console.error(err);
+    loadingSpinner.style.display = "none";
   }
-
-  const cohereData = await cohereResponse.json();
-
-  // Updated path to text: v2/chat returns an array in `response`
-  if (!(cohereData.response && cohereData.response.length > 0)) {
-    result.textContent = "❌ No recipe generated. Try again or check your API key.";
-    loadingSpinner.style.display = "none"; // Hide spinner on error
-    return;
-  }
-
-  const recipeText = cohereData.response[0].message.content.trim();
-  const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
-
-  // ...rest of your code stays the same (recipe splitting, DOM creation, Firestore save, image loader)
-  
-} catch (err) {
-  result.textContent = "❌ An error occurred while generating the recipe.";
-  console.error(err);
-  loadingSpinner.style.display = "none";
 }
-
-// 🔧 Helper: Generate image URL using Pollinations
-function generateImagePollinations(prompt) {
-  const encodedPrompt = encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${encodedPrompt}`;
-}
-
-
-
-document.getElementById("ingredients").addEventListener("keydown", function (event) {
-  if (event.key === "Enter") {
-    event.preventDefault(); // Prevent form submission or weird behavior
-    document.getElementById("generate-btn").click(); // Trigger the button click
-  }
-});
 
 
 const logout = document.getElementById('logout');
@@ -247,8 +323,7 @@ if(localStorage.getItem('logged') === 'false'){
   if (WelcomeUser && username) {
     WelcomeUser.textContent = `Welcome ${username}, Lets Cook`;
   }
-}
-
+} 
 
 
 
@@ -260,6 +335,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
