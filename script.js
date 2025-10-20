@@ -171,7 +171,10 @@ Separate each recipe clearly with a dashed line (---).`;
       return;
     }
 
-    const recipeText = cohereData.response[0].message.content.join('\n').trim();
+const recipeText = cohereData.response[0].message.content
+  .map(item => item.text)  // extract the 'text' field from each object
+  .join('\n')
+  .trim();
     const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
 
     result.innerHTML = "";
@@ -332,6 +335,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
