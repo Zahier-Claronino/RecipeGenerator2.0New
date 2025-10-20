@@ -143,7 +143,7 @@ Separate each recipe clearly with a dashed line (---).`;
     const cohereResponse = await fetch("https://api.cohere.com/v1/generate", {
       method: "POST",
       headers: {
-        Authorization: "Bearer 7NiBcnXBgwnBJlU5UTtodGKruHzGViokIulBkyeR",
+        Authorization: "Bearer V8ZgHC0BnnsNkIGaPv6CatEpnhVRPwHwX9ptxcW0",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -355,4 +355,5 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
