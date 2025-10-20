@@ -9,7 +9,6 @@ import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/fi
 import { auth } from './firebaseConfig.js';
 let currentUser = null;
 
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("✅ Auth state ready. Logged in as:", user.email);
@@ -54,8 +53,7 @@ style.textContent = `
 }`;
 document.head.appendChild(style);
 
-
-// Example function to save the recipe
+// Save recipe to Firestore
 async function saveRecipeToFirestore(title, ingredients, instructions) {
   if (!currentUser) {
     console.warn("Not logged in, not saving recipe.");
@@ -70,7 +68,6 @@ async function saveRecipeToFirestore(title, ingredients, instructions) {
       ingredients,
       instructions: instructions || "No instructions provided.",
       createdAt: serverTimestamp()
-      
     });
     console.log("✅ Recipe saved!");
   } catch (error) {
@@ -78,23 +75,21 @@ async function saveRecipeToFirestore(title, ingredients, instructions) {
   }
 }
 
+// Extract ingredients from recipe string
 function extractIngredientsFromRecipe(recipeString) {
   const ingredientsMatch = recipeString.match(/Ingredients:\n([\s\S]*?)\n\nInstructions:/);
   if (!ingredientsMatch) return [];
-
-  // Split ingredients by lines, remove the '- ' prefix
   return ingredientsMatch[1].split('\n').map(line => line.replace(/^\-\s*/, '').trim());
 }
 
+// Extract instructions from recipe string
 function extractInstructionsFromRecipe(recipeString) {
   const instructionsMatch = recipeString.match(/Instructions:\n([\s\S]*)/);
   if (!instructionsMatch) return "No instructions provided.";
-
   return instructionsMatch[1].trim();
 }
 
-
-
+// Generate recipe on button click
 const generateBtn = document.getElementById("generate-btn");
 generateBtn.addEventListener("click", generateRecipe);
 
@@ -107,9 +102,7 @@ async function generateRecipe() {
     return;
   }
 
-  // Show the loading spinner
   loadingSpinner.style.display = "flex";
-
   result.textContent = "Generating recipe... please wait.(Wait Time: 10s-45s)";
 
   const prompt = `You are a professional chef. Based ONLY on the following ingredients: ${ingredients}, generate as many complete recipes as possible.
@@ -164,18 +157,19 @@ Separate each recipe clearly with a dashed line (---).`;
 
     const cohereData = await cohereResponse.json();
 
-    // Fix: content is an array, so join it into a string
-    if (!(cohereData.response && cohereData.response.length > 0)) {
+    // ✅ FIX: properly extract text from content array
+    if (!cohereData.message || !cohereData.message.content || cohereData.message.content.length === 0) {
       result.textContent = "❌ No recipe generated. Try again or check your API key.";
       loadingSpinner.style.display = "none";
       return;
     }
 
-const recipeText = cohereData.response[0].message.content
-  .map(item => item.text)  // extract the 'text' field from each object
-  .join('\n')
-  .trim();
-    const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
+    const recipeText = cohereData.message.content
+      .map(item => item.text || "")
+      .join("\n")
+      .trim();
+
+    const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map(m => m[1]);
 
     result.innerHTML = "";
     const container = document.createElement("div");
@@ -184,7 +178,7 @@ const recipeText = cohereData.response[0].message.content
     container.style.justifyContent = "center";
     container.style.borderRadius = "10px";
 
-    const recipes = recipeText.split("---").map((r) => r.trim()).filter(Boolean);
+    const recipes = recipeText.split("---").map(r => r.trim()).filter(Boolean);
 
     for (let i = 0; i < recipes.length; i++) {
       const recipeDiv = document.createElement("div");
@@ -273,57 +267,53 @@ const recipeText = cohereData.response[0].message.content
   }
 }
 
+// Generate image URL
+function generateImagePollinations(prompt) {
+  const encodedPrompt = encodeURIComponent(prompt);
+  return `https://image.pollinations.ai/prompt/${encodedPrompt}`;
+}
 
+// Enter key triggers generation
+document.getElementById("ingredients").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    document.getElementById("generate-btn").click();
+  }
+});
+
+// Logout button
 const logout = document.getElementById('logout');
 const login = document.getElementById('login');
 const signup = document.getElementById('signup');
-logout.addEventListener('click', function(){
-  signOut(auth).then( async () => {
-
-    
-    
+logout.addEventListener('click', function() {
+  signOut(auth).then(() => {
     console.log("User signed out successfully.");
     alert("You have been logged out successfully.");
-    
-    
-    localStorage.removeItem('idToken'); // Clear token from local storage
-    localStorage.removeItem('username'); // Clear username from local storage
-    localStorage.removeItem('email'); // Clear email from local storage
-    localStorage.setItem('justLoggedIn', 'false'); // Reset justLoggedIn flag
-    localStorage.setItem('logged', 'false'); // Reset logged status
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.setItem('justLoggedIn', 'false');
+    localStorage.setItem('logged', 'false');
     window.location.href = 'login.html';
-
   });
-    
 });
 
-//remove logout button if not signed in (remember to add a sign up and sign in option if the user is not signed in)
-/*onAuthStateChanged(auth, (user) => {
-  if(!user){
-    logout.style.display = 'none';
-  }
-
-  if(user){
-    logout.style.display = 'block'
-  }
-});*/
+// Welcome user
 const WelcomeUser = document.getElementById('WelcomeUser');
 const username = localStorage.getItem('username');
-if(localStorage.getItem('logged') === 'false'){
+if (localStorage.getItem('logged') === 'false') {
   logout.style.display = 'none';
   login.style.display = 'block';
   signup.style.display = 'block';
   localStorage.removeItem('idToken');
-
-
-}else if(localStorage.getItem('logged') === 'true'){
+} else if (localStorage.getItem('logged') === 'true') {
   logout.style.display = 'block';
   login.style.display = 'none';
   signup.style.display = 'none';
   if (WelcomeUser && username) {
     WelcomeUser.textContent = `Welcome ${username}, Lets Cook`;
   }
-} 
+}
 
 
 
@@ -335,6 +325,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
