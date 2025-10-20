@@ -109,6 +109,7 @@ async function generateRecipe() {
 
   // Show the loading spinner
   loadingSpinner.style.display = "flex";
+
   result.textContent = "Generating recipe... please wait.(Wait Time: 10s-45s)";
 
   const prompt = `You are a professional chef. Based ONLY on the following ingredients: ${ingredients}, generate as many complete recipes as possible.
@@ -147,25 +148,32 @@ Separate each recipe clearly with a dashed line (---).`;
       },
       body: JSON.stringify({
         model: "command-xlarge-nightly",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 1500, // increased for longer recipes
+        messages: [
+          { role: "user", content: prompt }
+        ],
+        max_tokens: 500,
         temperature: 0.1,
       }),
     });
 
-    const cohereData = await cohereResponse.json();
-    console.log("Full API response:", cohereData); // <-- debug full response
-
-    // Safely check if response exists
-    const recipeText = cohereData.response?.[0]?.message?.content?.trim();
-
-    if (!recipeText) {
-      result.textContent = "❌ No recipe generated. Check your API key or try different ingredients.";
+    if (!cohereResponse.ok) {
+      result.textContent = `❌ Cohere API error: ${cohereResponse.status} ${cohereResponse.statusText}`;
       loadingSpinner.style.display = "none";
       return;
     }
 
+    const cohereData = await cohereResponse.json();
+
+    // Fix: content is an array, so join it into a string
+    if (!(cohereData.response && cohereData.response.length > 0)) {
+      result.textContent = "❌ No recipe generated. Try again or check your API key.";
+      loadingSpinner.style.display = "none";
+      return;
+    }
+
+    const recipeText = cohereData.response[0].message.content.join('\n').trim();
     const recipeTitles = [...recipeText.matchAll(/Recipe Name:\s*(.+)/g)].map((m) => m[1]);
+
     result.innerHTML = "";
     const container = document.createElement("div");
     container.style.display = "flex";
@@ -202,9 +210,7 @@ Separate each recipe clearly with a dashed line (---).`;
       const recipeIngredients = extractIngredientsFromRecipe(recipes[i]);
       const recipeInstructions = extractInstructionsFromRecipe(recipes[i]);
       await saveRecipeToFirestore(title, recipeIngredients, recipeInstructions);
-      console.log(`Saved recipe: ${title}`);
 
-      // Image loader
       const imageWrapper = document.createElement("div");
       imageWrapper.style.position = "relative";
       imageWrapper.style.display = "flex";
@@ -235,7 +241,8 @@ Separate each recipe clearly with a dashed line (---).`;
         spinner.remove();
         img.style.display = "block";
         requestAnimationFrame(() => {
-          img.style.height = `${pre.offsetHeight}px`;
+          const H = pre.offsetHeight;
+          img.style.height = `${H}px`;
         });
       };
 
@@ -262,6 +269,7 @@ Separate each recipe clearly with a dashed line (---).`;
     loadingSpinner.style.display = "none";
   }
 }
+
 
 const logout = document.getElementById('logout');
 const login = document.getElementById('login');
@@ -324,6 +332,7 @@ if(localStorage.getItem('logged') === 'false'){
 
 
     
+
 
 
 
